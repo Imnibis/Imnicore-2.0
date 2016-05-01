@@ -1,0 +1,13 @@
+Options +FollowSymlinks
+RewriteEngine On
+
+# Décommentez la ligne suivante si vous avez des problèmes avec l'URL Rewriting.
+# RewriteBase /
+
+RewriteRule ^/install$ /install/index.php
+RewriteRule ^/install/(.*)$ /install/$1.php [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^/(.*)$ /index.php?page=$1 [L]

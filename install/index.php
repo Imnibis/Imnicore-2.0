@@ -21,18 +21,18 @@ $relativepath = str_replace('http://' . $_SERVER['HTTP_HOST'], '', $path);
 			$rewrite = false;
 			$chmod = false;
 			$curl = false;
-			$errored = false;
+			$erreur = true;
 			if(apache_module_exists('mod_rewrite')) {
 				$rewrite = true;
-				$errored = true;
+				$erreur = false;
 			}
 			if(function_exists('curl_version')) {
 				$curl = true;
-				$errored = true;
+				$erreur = false;
 			}
 			if(is_writable('../includes')) {
 				$chmod = true;
-				$errored = true;
+				$erreur = false;
 			}
 			if(!$rewrite) {
 				echo 'Le module mod_rewrite n\'est pas activé. Il est nécessaire pour faire tourner IMNICORE. Veuillez l\'activer ou changer d\'hébergeur.<br>';
@@ -43,10 +43,10 @@ $relativepath = str_replace('http://' . $_SERVER['HTTP_HOST'], '', $path);
 			if(!$chmod) {
 				echo 'PHP ne peut pas écrire dans le dossier includes, veuillez définir son chmod à 777 pour continuer.<br>';
 			}
-			if(!$errored) {
+			if(!$erreur) {
 				echo 'Veuillez cliquer sur le bouton pour continuer l\'installation.<br>';
 			}
 		?>
-		<?php if(!$errored) { ?><a href="<?php echo $path; ?>/install/step1"><?php } ?><button<?php if($errored) { ?> disabled<?php } ?>>Continuer!</button><?php if(!$errored) { ?></a><?php } ?>
+		<?php if(!$erreur) { ?><a href="<?php echo $path; ?>/install/step1"><?php } ?><button<?php if($erreur) { ?> disabled<?php } ?>>Continuer!</button><?php if(!$erreur) { ?></a><?php } ?>
 	</body>
 <html>
