@@ -18,21 +18,21 @@ $relativepath = str_replace('http://' . $_SERVER['HTTP_HOST'], '', $path);
 			{
 				return in_array($module, apache_get_modules());
 			}
-			$rewrite = false;
-			$chmod = false;
-			$curl = false;
-			$erreur = true;
-			if(apache_module_exists('mod_rewrite')) {
-				$rewrite = true;
-				$erreur = false;
+			$rewrite = true;
+			$chmod = true;
+			$curl = true;
+			$erreur = false;
+			if(!apache_module_exists('mod_rewrite')) {
+				$rewrite = false;
+				$erreur = true;
 			}
-			if(function_exists('curl_version')) {
-				$curl = true;
-				$erreur = false;
+			if(!function_exists('curl_version')) {
+				$curl = false;
+				$erreur = true;
 			}
-			if(is_writable('../includes')) {
-				$chmod = true;
-				$erreur = false;
+			if(!is_writable('../includes')) {
+				$chmod = false;
+				$erreur = true;
 			}
 			if(!$rewrite) {
 				echo 'Le module mod_rewrite n\'est pas activé. Il est nécessaire pour faire tourner IMNICORE. Veuillez l\'activer ou changer d\'hébergeur.<br>';
