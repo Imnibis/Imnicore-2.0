@@ -9,10 +9,12 @@ ini_set('display_errors', true);
 #
 ##
 
+set_include_path('/var/www/dev');
 $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 $file = '/core.php';
 $url = str_replace($file, '', $url);
 $path = htmlspecialchars(rtrim($url, '/'), ENT_QUOTES, 'UTF-8');
+$relativepath = str_replace('http://' . $_SERVER['HTTP_HOST'], '', $path);
 
 ##
 #
@@ -20,7 +22,7 @@ $path = htmlspecialchars(rtrim($url, '/'), ENT_QUOTES, 'UTF-8');
 #
 ##
 
-include($path . '/includes/session.inc.php');
+require($path . '/includes/session.inc.php');
 
 ##
 #
@@ -28,22 +30,9 @@ include($path . '/includes/session.inc.php');
 #
 ##
 
-include($path . '/class/imnicore.class.php');
-include($path . '/class/user.class.php');
+require($relativepath . '/class/imnicore.class.php');
+require($relativepath . '/class/user.class.php');
 
-##
-#
-# NETTOYAGE DE LA VARIABLE PATH
-#
-##
 
-$path = NULL;
 
-##
-#
-# CREATION DES OBJETS
-#
-##
-
-$imnicore = new Imnicore('mysql', 'localhost', 'root', 'Imniboss123', 'imnicore');
-$user = new User();
+echo $imnicore->getPath();
