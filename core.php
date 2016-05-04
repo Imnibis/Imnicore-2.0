@@ -9,22 +9,10 @@ ini_set('display_errors', true);
 #
 ##
 
-$url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+$url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 $file = '/core.php';
 $url = str_replace($file, '', $url);
 $path = htmlspecialchars(rtrim($url, '/'), ENT_QUOTES, 'UTF-8');
-
-##
-#
-# VERRIFICATION DE L'INSTALLATION
-#
-##
-
-if(!file_exists($path . '/includes/database.inc.php')) {
-	$installed = false;
-	header('Location: ' . $path . '/install/');
-	exit;
-}
 
 ##
 #
@@ -33,7 +21,6 @@ if(!file_exists($path . '/includes/database.inc.php')) {
 ##
 
 include($path . '/includes/session.inc.php');
-include($path . '/includes/database.inc.php');
 
 ##
 #
@@ -58,5 +45,5 @@ $path = NULL;
 #
 ##
 
-$imnicore = new Imnicore();
+$imnicore = new Imnicore('mysql', 'localhost', 'root', 'Imniboss123', 'imnicore');
 $user = new User();
