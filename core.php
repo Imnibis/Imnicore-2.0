@@ -43,7 +43,6 @@ $relativePath = preg_replace('#((http:\/\/|https:\/\/)(www.)?(([a-zA-Z0-9-]){2,}
 #
 ##
 
-require($relativepath . '/twig/Autoloader.php');
 require($relativepath . '/class/imnicore.class.php');
 require($relativepath . '/class/user.class.php');
 $user = new User($imnicore, $_SESSION);
