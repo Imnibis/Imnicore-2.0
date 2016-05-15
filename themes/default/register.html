@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{{imnicore->getName()}}</title>
+	</head>
+	<body>
+		<h1>INSCRIPTION L0L</h1>
+		<hr>
+		{{errorMsg}}
+		<form action="{{imnicore->getPath()}}/register/submit" method="POST">
+			<label for="username">Pseudo: </label><input type="text" name="username" /><br>
+			<label for="password">Mot de passe: </label><input type="password" name="password" /><br>
+			<label for="repassword">Confirmation: </label><input type="password" name="repassword" /><br>
+			<label for="email">Email: </label><input type="text" name="email" /><br>
+			<button type="submit">Valider</button>
+		</form>
+		<hr>
+		Par Imnibis
+	</body>
+</html>

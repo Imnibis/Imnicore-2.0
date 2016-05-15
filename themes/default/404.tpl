@@ -1,1 +1,0 @@
-ERREUR: {{text}} NOT FOUND

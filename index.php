@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 ##
 #
 # AFFICHAGE DES ERREURS

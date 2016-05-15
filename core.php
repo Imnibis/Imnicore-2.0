@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 ##
 #
 # MODIFICATIONS DES PARAMETRES PHP
@@ -43,14 +43,26 @@ $relativePath = preg_replace('#((http:\/\/|https:\/\/)(www.)?(([a-zA-Z0-9-]){2,}
 #
 ##
 
+require($relativepath . '/twig/Autoloader.php');
 require($relativepath . '/class/imnicore.class.php');
 require($relativepath . '/class/user.class.php');
+$user = new User($imnicore, $_SESSION);
 
 ##
 #
-# CREATION DES OBJETS
+# INCLUSION DES PRESETS
 #
 ##
 
-$imnicore = new Imnicore('localhost', 'root', 'Imniboss123', 'imnicore');
-$user = new User();
+/*if($imnicore->getSetting('usePresets') == 1) {
+	foreach(scandir('./') as $k) {
+		if(preg_match('/preset(.+)\.php/', $k)) {
+			$k = preg_replace('/preset(.+)\.php/', '$1', $k);
+			require($imnicore->getRelativePath() . '/preset' . $k . '.php');
+			$getPreset = file_get_contents($imnicore->getPath() . '/themes/' . $imnicore->getSetting('theme') . '/preset' . $k . '.html');
+			$blownPreset = explode('{!}', $getPreset);
+			$preset[$k][0] = preg_replace('#{{(.+)}}#', '<?php echo $${1}; ?>', $blownPreset[0]);
+			$preset[$k][1] = preg_replace('#{{(.+)}}#', '<?php echo $${1}; ?>', $blownPreset[1]);
+		}
+	}
+}*/
