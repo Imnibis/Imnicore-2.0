@@ -6,11 +6,13 @@
 #
 ##
 
+header('Access-Control-Allow-Origin: *');
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
 
-// Remplacez le chemin ci-dessous par le chemin absolu menant à la racine du serveur web.
-set_include_path('/var/www/dev');
+if(!isset($_SESSION)) {
+	$_SESSION = array();
+}
 
 ##
 #
@@ -19,23 +21,22 @@ set_include_path('/var/www/dev');
 ##
 
 $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-$file = '/core.php';
-$file2 = '/index.php';
-$url = str_replace($file, '', $url);
-$url = str_replace($file2, '', $url);
-$path = htmlspecialchars(rtrim($url, '/'), ENT_QUOTES, 'UTF-8');
-$relativePath = preg_replace('#((http:\/\/|https:\/\/)(www.)?(([a-zA-Z0-9-]){2,}\.){1,9}([a-zA-Z]){2,6}(\/?))#', '', $path);
+$url = explode('/', $url);
+array_pop($url);
+$url = implode('/', $url);
+$path = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+$relativePath = preg_replace('#((http:\/\/|https:\/\/)(www.)?(([a-zA-Z0-9-]){2,}\.){1,9}([a-zA-Z]){2,6})#', '', $path);
+if($relativePath == '/') {
+	$relativePath = '';
+}
 
 ##
 #
-# VERIFICATION DE L'INSTALLATION
+# INCLUSIONS
 #
 ##
 
-/*if(!file_exists($relativepath . '/includes/database.inc.php')) {
-	header('Location: ' . $relativepath . '/install');
-	exit;
-}*/
+require($relativePath . 'ic.settings.php');
 
 ##
 #
@@ -43,25 +44,26 @@ $relativePath = preg_replace('#((http:\/\/|https:\/\/)(www.)?(([a-zA-Z0-9-]){2,}
 #
 ##
 
-require($relativepath . '/class/imnicore.class.php');
-require($relativepath . '/class/user.class.php');
+require($relativePath . 'class/imnicore.class.php');
+$imnicore = new Imnicore($dbhost, $dbuser, $dbpassword, $dbname);
+unset($dbhost);
+unset($dbuser);
+unset($dbpassword);
+unset($dbname);
+require($relativePath . 'class/user.class.php');
 $user = new User($imnicore, $_SESSION);
 
+$lang = $imnicore->getLangVars();
+
 ##
 #
-# INCLUSION DES PRESETS
+# INITIALISATION DE SMARTY
 #
 ##
 
-/*if($imnicore->getSetting('usePresets') == 1) {
-	foreach(scandir('./') as $k) {
-		if(preg_match('/preset(.+)\.php/', $k)) {
-			$k = preg_replace('/preset(.+)\.php/', '$1', $k);
-			require($imnicore->getRelativePath() . '/preset' . $k . '.php');
-			$getPreset = file_get_contents($imnicore->getPath() . '/themes/' . $imnicore->getSetting('theme') . '/preset' . $k . '.html');
-			$blownPreset = explode('{!}', $getPreset);
-			$preset[$k][0] = preg_replace('#{{(.+)}}#', '<?php echo $${1}; ?>', $blownPreset[0]);
-			$preset[$k][1] = preg_replace('#{{(.+)}}#', '<?php echo $${1}; ?>', $blownPreset[1]);
-		}
-	}
-}*/
+require_once($imnicore->getRelativePath() . 'smarty/libs/Autoloader.php');
+Smarty_Autoloader::register();
+$tpl = new Smarty();
+$tpl->assign('imnicore', $imnicore);
+$tpl->assign('user', $user);
+$tpl->assign('lang', $lang);

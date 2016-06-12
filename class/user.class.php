@@ -4,43 +4,43 @@ class User {
 	private $id = NULL;
 	private $name = NULL;
 	private $email = NULL;
-	private $admin = NULL;
+	private $rank = NULL;
+	private $token = NULL;
+	private $usersTable = "users";
 	private $imnicore;
 	public function __construct(Imnicore $imnicore, $session) {
 		$this->imnicore = $imnicore;
+		if($this->imnicore->getSetting('habbo') == 1 && $this->imnicore->getSetting('emulator') == "comet") {
+			$this->usersTable = "players";
+		}
 		if(!empty($session)) {
 			$this->id = $session['id'];
 			$this->name = $session['name'];
 			$this->email = $session['email'];
-			$data = $this->imnicore->query('SELECT admin FROM users WHERE id = ?', array($this->id));
-			if($data['admin'] == 1) {
-				$admin == true;
-			} else {
-				$admin == false;
-			}
-			$this->admin = $admin;
+			$data = $this->imnicore->query('SELECT rank FROM ' . $this->usersTable . ' WHERE id = ?', array($this->id));
+			$this->rank = $data['rank'];
 		}
 	}
 	public function login($username, $password) {
 		$errored = false;
 		$password = $this->imnicore->hash($password);
-		$data = $this->imnicore->query('SELECT * FROM users WHERE username = ? AND password = ?', array($username, $password));
+		if(empty($username) || empty($password)) {
+			$errored = true;
+			$msg[] = "Tous les champs doivent être remplis.";
+		}
+		$data = $this->imnicore->query('SELECT * FROM ' . $this->usersTable . ' WHERE username = ? AND password = ?', array($username, $password));
 		if(empty($data)) {
 			$errored = true;
+			$msg[] = "Pseudo ou mot de passe incorrect.";
 		}
 		if(!$errored) {
-			if($data['admin'] == 1) {
-				$admin == true;
-			} else {
-				$admin == false;
-			}
 			$this->setUserVar('id', $data['id']);
 			$this->setUserVar('name', $data['username']);
 			$this->setUserVar('email', $data['email']);
-			$this->admin = $admin;
-			return true;
+			$this->setUserVar('rank', $data['rank']);
+			return array('success' => true);
 		} else {
-			return false;
+			return array('success' => false, 'msg' => $msg);
 		}
 	}
 	public function getId() {
@@ -52,8 +52,31 @@ class User {
 	public function getEmail() {
 		return $this->email;
 	}
+	
+	private function initToken() {
+		$temptoken = $this->imnicore->getToken(100);
+		$this->imnicore->query('UPDATE ' . $this->usersTable . ' SET auth_ticket=? WHERE id=?', array($temptoken, $this->getId()));
+		$this->token = $temptoken;
+	}
+	
+	public function getToken() {
+		if($this->token == NULL) {
+			$this->initToken();
+		}
+		return $this->token;
+	}
+	public function getInfo($column) {
+		$data = $this->imnicore->query('SELECT * FROM ' . $this->usersTable . ' WHERE id = ?', array($this->getId()));
+		return $data[$column];
+	}
 	public function isAdmin() {
-		return $this->admin;
+		if($this->rank >= 5) {
+			return true;
+		}
+		return false;
+	}
+	public function getRank() {
+		return $this->rank;
 	}
 	private function setUserVar($uvar, $uvalue) {
 		$this->$uvar = $uvalue;
@@ -63,7 +86,8 @@ class User {
 		$this->id = NULL;
 		$this->name = NULL;
 		$this->email = NULL;
-		$this->admin = NULL;
+		$this->rank = NULL;
+		$this->token = NULL;
 		session_destroy();
 		header('Location: ' . $this->imnicore->getPath());
 		exit;
@@ -75,19 +99,14 @@ class User {
 			return true;
 		}
 	}
-	public function register($username, $password, $repassword, $email, $admin = false) {
+	public function register($username, $password, $repassword, $email, $dRank = 1) {
 		$errored = false;
 		$msg = array();
-		if($admin) {
-			$dAdmin = 1;
-		} else {
-			$dAdmin = 0;
-		}
-		if(!preg_match('/^[a-z\d_]{5,20}$/i', $username)) {
+		if(!preg_match('/^[a-z\d_.-@ç!:\/;?.*%$£\(\)#{\[|\]]{5,30}$/i', $username)) {
 			$errored = true;
-			$msg[] = 'Votre pseudo doit faire entre 5 et 20 caractères et ne doit pas utiliser de caractères spéciaux.';
+			$msg[] = 'Votre pseudo doit faire entre 5 et 20 caractères.';
 		}
-		if(!empty($this->imnicore->query('SELECT * FROM users WHERE username = ?', array($username)))) {
+		if(!empty($this->imnicore->query('SELECT * FROM ' . $this->usersTable . ' WHERE username = ?', array($username)))) {
 			$errored = true;
 			$msg[] = 'Votre pseudo est déjà pris.';
 		}
@@ -107,20 +126,32 @@ class User {
 			$errored = true;
 			$msg[] = 'Votre email est invalide.';
 		}
-		if(!empty($this->imnicore->query('SELECT * FROM users WHERE email = ?', array($email)))) {
+		if(!empty($this->imnicore->query('SELECT * FROM ' . $this->usersTable . ' WHERE email = ?', array($email)))) {
 			$errored = true;
 			$msg[] = 'Votre adresse email est déjà utilisée.';
 		}
 		if(!$errored) {
 			$hPassword = $this->imnicore->hash($password);
-			$id = $this->imnicore->query('INSERT INTO users (`username`, `password`, `email`, `admin`) VALUES (?, ?, ?, ?)', array($username, $hPassword, $email, $dAdmin));
+			$temptoken = $this->imnicore->getToken(100);
+			$id = $this->imnicore->query('INSERT INTO ' . $this->usersTable . ' (`username`, `password`, `email`, `rank`, `auth_ticket`) VALUES (?, ?, ?, ?, ?)', array($username, $hPassword, $email, $dRank, $temptoken));
 			$this->setUserVar('id', $id);
 			$this->setUserVar('name', $username);
 			$this->setUserVar('email', $email);
-			$this->setUserVar('admin', $admin);
+			$this->setUserVar('token', $temptoken);
+			$this->setUserVar('rank', $dRank);
 			return array('success' => true);
 		} else {
 			return array('success' => false, 'errors' => $msg);
 		}
+	}
+	
+	public function getCredits() {
+		return $this->getInfo("credits");
+	}
+	public function getDiamonds() {
+		return $this->getInfo('vip_points');
+	}
+	public function getDuckets() {
+		return $this->getInfo('activity_points');
 	}
 }
