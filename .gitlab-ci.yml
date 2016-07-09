@@ -1,0 +1,15 @@
+dev:
+  only:
+    - dev
+  script:
+    - rm -rf $(ls -rt -d /var/www/dev/imnibis/Imnicore-dev/{*,.*}) || true
+    - cp -r . /var/www/dev/imnibis/Imnicore-dev/
+    - chmod -R 777 /var/www/dev/imnibis/Imnicore-dev/
+production:
+  only:
+    - master
+  script:
+    - rm -rf /var/www/dev/imnibis/Imnicore/
+    - mkdir  /var/www/dev/imnibis/Imnicore/
+    - cp -r . /var/www/dev/imnibis/Imnicore/
+    - chmod -R 777 /var/www/dev/imnibis/Imnicore/
