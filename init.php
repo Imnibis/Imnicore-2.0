@@ -7,9 +7,9 @@ class Imnicore {
 	}
 	
 	public function init() {
-		$json = file_get_content('settings.json');
+		$json = file_get_contents('settings.json');
 		$config = json_decode($json, true);
-		$db = new Database();
-		yvdbiusonsdo
+		$db = new Database($config['database']['host'], $config['database']['user'], $config['database']['password'], $config['database']['name']);
+		return $db;
 	}
 }
