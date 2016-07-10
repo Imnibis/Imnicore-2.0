@@ -1,5 +1,13 @@
 <?php
 
+#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
+#									#
+#			   IMNICORE				#
+#									#
+#			  PAR IMNIBIS			#
+#									#
+#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
+
 class Database {
 	private $db;	
 	public function __construct($host, $dbuser, $dbpassword, $dbname) {

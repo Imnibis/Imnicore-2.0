@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 #									#
@@ -8,6 +8,6 @@
 #									#
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
-class Response {
+class ControllerBase implements Template {
 	
 }
