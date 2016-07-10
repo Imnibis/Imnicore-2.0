@@ -11,7 +11,7 @@
 class Response {
 	private $page = NULL;
 	public function __construct() {
-		if($this->checkPage()) {
+		if(!$this->checkPage()) {
 			$this->is404(true);
 		}
 		require('controller/' . Imnicore::getTheme() . '/' . $this->getPageID() . '.php');
