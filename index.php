@@ -10,6 +10,7 @@
 
 require('inc/errorHandler.php');
 require('imnicore.php');
-$config = Imnicore::init();
-$db = $config['database'];
-echo Imnicore::getSetting('path');
+require('inc/controller.php');
+require('inc/response.php');
+
+$response = new Response();
