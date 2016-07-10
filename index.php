@@ -1,6 +1,14 @@
 <?php
+
+#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
+#									#
+#			   IMNICORE				#
+#									#
+#			  PAR IMNIBIS			#
+#									#
+#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
+
 require('inc/errorHandler.php');
 require('init.php');
-$imnicore = new Imnicore();
-$db = $imnicore->init();
+$db = Imnicore::init();
 echo $db->query('SELECT * FROM ic_settings')['path'];

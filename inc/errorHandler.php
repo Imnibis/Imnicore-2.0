@@ -1,4 +1,14 @@
 <?php
+
+#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
+#									#
+#			   IMNICORE				#
+#			  PAR IMNIBIS			#
+#									#
+#	  ERROR HANDLER PAR MAXOUFOX	#
+#									#
+#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
+
 define('START_TIME', microtime(true));
 $DISPLAY_ERRORS = true;
 
