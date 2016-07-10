@@ -11,7 +11,7 @@
 class Response {
 	private $page = NULL;
 	public function __construct() {
-		is404(($this->checkPage()));
+		$this->is404(($this->checkPage()));
 		require('controller/' . Imnicore::getTheme() . '/' . $this->getPageID() . '.php');
 		$controller = new Controller();
 		$controller->displayTpl('view/' . Imnicore::getTheme() . '/', $this->getPageID());
