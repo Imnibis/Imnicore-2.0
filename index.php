@@ -9,6 +9,7 @@
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
 require('inc/errorHandler.php');
-require('init.php');
-$db = Imnicore::init();
-echo $db->query('SELECT * FROM ic_settings')['path'];
+require('imnicore.php');
+$config = Imnicore::init();
+$db = $config['database'];
+echo Imnicore::getSetting('path');
