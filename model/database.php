@@ -2,7 +2,7 @@
 
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 #									#
-#			   IMNICORE				#
+#			 IMNICORE 2.0			#
 #									#
 #			  PAR IMNIBIS			#
 #									#
@@ -14,7 +14,7 @@ class Database {
 		try {
 			$this->db = new PDO('mysql:host=' . $host . ';dbname=' . $dbname, $dbuser, $dbpassword);
 		} catch(PDOException $e) {
-			die("<b>IMNICORE //</b> ERREUR PDO: " . $e->getMessage() . "<br/>");
+			throw new PDOException($e->getMessage());
 		}
 		$this->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		$this->db->query("SET CHARACTER SET utf8");

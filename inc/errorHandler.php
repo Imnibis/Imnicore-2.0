@@ -2,7 +2,7 @@
 
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 #									#
-#			   IMNICORE				#
+#			 IMNICORE 2.0			#
 #			  PAR IMNIBIS			#
 #									#
 #	  ERROR HANDLER PAR MAXOUFOX	#

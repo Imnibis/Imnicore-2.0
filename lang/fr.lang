@@ -1,0 +1,23 @@
+{
+	"install.welcome.title": "Bienvenue sur Imnicore 2.0!",
+	"install.welcome.text1": "Bienvenue sur l'interface d'installation d'Imnicore. Imnicore est un outil pour les développeurs afin de faciliter la création de leur site.",
+	"install.welcome.text2": "Ceci n'est en aucun cas un CMS, ni rien qui ne soit utilisable directement. C'est juste une base pour vous faciliter la vie et commencer directement à développer.",
+	"install.welcome.text3": "Cliquez sur le bouton ci-dessous pour commencer l'installation.",
+	"install.database.title": "Configuration de la base de données",
+	"install.database.text": "Imnicore a besoin des informations de votre base de données pour commencer. Veuillez les écrire ci-dessous",
+	"install.database.host": "Hôte",
+	"install.database.user": "Utilisateur",
+	"install.database.password": "Mot de passe",
+	"install.database.name": "Base de données",
+	"install.error.empty": "Tous les champs doivent être remplis.",
+	"install.database.error.pdo": "ERREUR PDO: ",
+	"install.default.title": "Configuration par défaut",
+	"install.default.text": "Quelques dernières précisions avant de pouvoir commencer à utiliser Imnicore.",
+	"install.default.url": "URL du site",
+	"install.done.title": "Installation terminée!",
+	"install.done.text1": "L'installation s'est déroulée avec succès! Vous pouvez maintenant commencer à utiliser Imnicore.",
+	"install.done.text2": "Cliquez sur le bouton ci-dessous pour supprimer les fichiers d'installation."
+	"install.done.remove": "Supprimer",
+	"done": "Valider",
+	"begin": "Commencer"
+}

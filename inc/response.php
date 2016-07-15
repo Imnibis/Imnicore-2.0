@@ -2,7 +2,7 @@
 
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 #									#
-#			   IMNICORE				#
+#			 IMNICORE 2.0			#
 #									#
 #			  PAR IMNIBIS			#
 #									#
@@ -11,6 +11,9 @@
 class Response {
 	private $page = NULL;
 	public function __construct() {
+		if(!Imnicore::installed()) {
+			$this->page = 'imnicore/install';
+		}
 		if(!$this->checkPage()) {
 			$this->is404(true);
 		}
