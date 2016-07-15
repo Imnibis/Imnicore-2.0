@@ -1,8 +1,8 @@
 {
   "database": {
     "host": "vic-team.fr",
-    "user": "root",
-    "password": "Imniboss123",
+    "user": "imnicore",
+    "password": "imnicore",
     "name": "imnicore"
   }
 }
