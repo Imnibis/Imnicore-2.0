@@ -34,7 +34,7 @@ class Controller extends ControllerBase {
 		$errored = false;
 		if(!isset($_POST['host']) || !isset($_POST['user']) || !isset($_POST['password']) || !isset($_POST['dbname'])) {
 			$errored = true;
-			$msg = Lang::get('install.error.empty');
+			$msg = Lang::get('form.error.empty');
 		} else {
 			try {
 				$db = new Database($_POST['host'], $_POST['user'], $_POST['password'], $_POST['dbname']);
@@ -60,7 +60,7 @@ class Controller extends ControllerBase {
 	private function checkInfos() {
 		if(!isset($_POST['URL'])) {
 			$errored = true;
-			$msg = Lang::get('install.error.empty');
+			$msg = Lang::get('form.error.empty');
 			$this->addTplVar('errorMsg', $msg);
 		} else {
 			$db = Imnicore::getDB();

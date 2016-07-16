@@ -1,5 +1,5 @@
 {
-	"install.welcome.title": "Bienvenue sur Imnicore 2.0!",
+	"install.welcome.title": "Bienvenue sur Imnicore %version%!",
 	"install.welcome.text1": "Bienvenue sur l'interface d'installation d'Imnicore. Imnicore est un outil pour les développeurs afin de faciliter la création de leur site.",
 	"install.welcome.text2": "Ceci n'est en aucun cas un CMS, ni rien qui ne soit utilisable directement. C'est juste une base pour vous faciliter la vie et commencer directement à développer.",
 	"install.welcome.text3": "Cliquez sur le bouton ci-dessous pour commencer l'installation.",
@@ -9,7 +9,7 @@
 	"install.database.user": "Utilisateur",
 	"install.database.password": "Mot de passe",
 	"install.database.name": "Base de données",
-	"install.error.empty": "Tous les champs doivent être remplis.",
+	"form.error.empty": "Tous les champs doivent être remplis.",
 	"install.database.error.pdo": "ERREUR PDO: ",
 	"install.default.title": "Configuration par défaut",
 	"install.default.text": "Quelques dernières précisions avant de pouvoir commencer à utiliser Imnicore.",
@@ -19,5 +19,12 @@
 	"install.done.text2": "Cliquez sur le bouton ci-dessous pour supprimer les fichiers d'installation."
 	"install.done.remove": "Supprimer",
 	"done": "Valider",
-	"begin": "Commencer"
+	"begin": "Commencer",
+	"register.error.username.length": "Votre pseudo doit faire entre %min% et %max% caractères.",
+	"register.error.username.exists": "Votre pseudo est déjà pris.",
+	"register.error.password.length": "Votre mot de passe doit faire entre %min% et %max% caractères.",
+	"register.error.password.equal": "Vos mots de passes ne sont pas égaux.",
+	"register.error.email.invalid": "Votre adresse email est invalide.",
+	"register.error.email.exists": "Votre adresse email est déjà utilisée.",
+	"login.error.invalid": "Pseudo ou mot de passe incorrect."
 }
