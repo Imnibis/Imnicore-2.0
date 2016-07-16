@@ -38,16 +38,87 @@ class Imnicore {
     rmdir($dir); 
 	}
 	
+	public static function hash($password) {
+		$db = self::getDB();
+		$salt1 = $db->query('SELECT * FROM ic_settings WHERE name = "salt1"');
+		$salt2 = $db->query('SELECT * FROM ic_settings WHERE name = "salt2"');
+		
+		if(!$salt1 || !$salt2) {
+			$salt1 = self::getToken(5);
+			$salt2 = self::getToken(10);
+			$db->query('DELETE FROM ic_settings WHERE `name` = "salt1" || `name` = "salt2"');
+			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "salt1", ?), (NULL, "salt2", ?)', array($salt1, $salt2));
+		}
+		
+		return sha1($salt1 . $salt2 . md5($salt1 . $password . $salt2 . $salt1) . $salt2 . $salt1 . $salt2); // I love security
+	}
+	
+	public static function crypto_rand_secure($min, $max)
+	{
+		$range = $max - $min;
+		if ($range < 1) return $min;
+		$log = ceil(log($range, 2));
+		$bytes = (int) ($log / 8) + 1;
+		$bits = (int) $log + 1;
+		$filter = (int) (1 << $bits) - 1;
+		do {
+			$rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
+			$rnd = $rnd & $filter;
+		} while ($rnd >= $range);
+		return $min + $rnd;
+	}
+	
+	public static function usersTable($table = NULL) {
+		$db = self::getDB();
+		if($table == NULL) {
+			return (self::installed()) ? self::getSetting('usersTable', 'users') : 'undefined';
+		} else {
+			if(self::installed()) {
+				self::setSetting('usersTable', $table);
+			}
+			return self::installed();
+		}
+	}
+	
+	public static function getSetting($param, $default = NULL) {
+		$db = self::getDB();
+		$query = $db->query('SELECT * FROM ic_settings WHERE `name` = ?', array($param));
+		if(!$query) {
+			self::setSetting($param, $default);
+			$query['value'] = $default;
+		}
+		return (self::installed()) ? $query['value'] : 'undefined';
+	}
+
+	public static function setSetting($param, $value) {
+		$db = self::getDB();
+		$query = $db->query('SELECT * FROM ic_settings WHERE `name` = ?', array($param));
+		if($query) {
+			$db->query('UPDATE TABLE ic_settings SET `value` = ? WHERE `name` = ?', array($value, $param));
+		} else {
+			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, ?, ?)', array($param, $value));
+		}
+		return true;
+	}
+	
+	public static function getToken($length) {
+		$token = "";
+		$codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		$codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
+		$codeAlphabet.= "0123456789";
+		$max = strlen($codeAlphabet) - 1;
+		for ($i=0; $i < $length; $i++) {
+			$token .= $codeAlphabet[self::crypto_rand_secure(0, $max)];
+		}
+		return $token;
+	}
+	
 	public static function getIcVersion() {
 		return (self::installed()) ? self::getSetting('version') : '2.0';
 	}
 	
 	public static function installed() {
 		return (file_exists("settings.json"));
-	}
-	
-	public static function getSetting($param) {
-		return (self::installed()) ? self::getDB()->query('SELECT * FROM ic_settings WHERE name=?', array($param))['value'] : 'undefined';
 	}
 	
 	public static function redirect($url, $javascript = false) {
