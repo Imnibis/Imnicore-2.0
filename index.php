@@ -14,6 +14,7 @@
 
 require('inc/errorHandler.php');
 require('imnicore.php');
+require('inc/lang.php');
 require('inc/controller.php');
 require('inc/response.php');
 

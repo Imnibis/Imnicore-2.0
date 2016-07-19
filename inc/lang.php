@@ -15,19 +15,17 @@ class Lang {
 	}
 	private static function parse($langVar, $vars) {
 		if(is_array($vars)) {
-			preg_match('%(.+)%', $langVar, $matches);
-			foreach($matches as $k => $v) {
-				foreach($vars as $k2 => $v2) {
-					if($v == $k2) {
-						preg_replace('%' . $v . '%', $v2, $langVar);
-						return $langVar;
-					}
-				}
+			foreach($vars as $k => $v) {
+				preg_replace('#(.)%' . $k . '%(.)#', '$1' . $v . '$3', $langVar);
 			}
 		} else {
-			preg_replace('%(.+)%', $vars, $langVar);
-			return $langVar;
+			preg_replace('#(.)%([^%]+)%(.)#', '$1' . $vars . '$3', $langVar);
 		}
+		return $langVar;
+	}
+	
+	public static function debug() {
+		return self::getLangVars();
 	}
 	
 	public static function get($langVar, $vars = NULL) {

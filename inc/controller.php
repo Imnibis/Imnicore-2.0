@@ -12,7 +12,7 @@ class ControllerBase {
 	private $tpl;
 	private $tplPath = NULL;
 	private $tplFile = NULL;
-	public function __construct() {
+	public function init() {
 		require('smarty/libs/Autoloader.php');
 		Smarty_Autoloader::register();
 		$this->tpl = new Smarty();
