@@ -17,7 +17,7 @@ class Lang {
 		if(is_array($vars)) {
 			foreach($vars as $k => $v) {
 				$langVar = preg_replace('#(.)%' . $k . '%(.)#', '${1}' . $v . '${2}', $langVar);
-			}
+			} 
 		} else {
 			$langVar = preg_replace('#(.)%([^%]+)%(.)#', '${1}' . $vars . '${3}', $langVar);
 		}
