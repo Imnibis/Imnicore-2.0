@@ -1,4 +1,9 @@
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-d
+
+# Décommentez la ligne suivante si vous avez des problèmes avec l'URL Rewriting.
+# RewriteBase /
+
+RewriteRule ^news/([1-9]+)$ index.php?page=news&id=$1
+
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(([A-Za-z0-9\-_]+/)*[A-Za-z0-9\-_]+)?$ index.php?page=$1
+RewriteRule ^(.+)$ index.php?page=$1 [QSA,L]
