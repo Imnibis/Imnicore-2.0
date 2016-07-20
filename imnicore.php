@@ -38,6 +38,14 @@ class Imnicore {
     rmdir($dir); 
 	}
 	
+	public static function getLangs() {
+		$langs = array();
+		foreach(glob('lang/*.lang') as $lang) {
+			$langs[] = $lang;
+		}
+		return $langs;
+	}
+	
 	public static function hash($password) {
 		$db = self::getDB();
 		$salt1 = $db->query('SELECT * FROM ic_settings WHERE name = "salt1"');
@@ -139,7 +147,6 @@ class Imnicore {
 	}
 	
 	public static function getLang() {
-		
 		return (self::installed()) ? self::getSetting('lang') : 'fr';
 	}
 	
