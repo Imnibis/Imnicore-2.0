@@ -11,8 +11,15 @@
 class Controller extends ControllerBase {
 	public function __construct() {
 		$this->init(); // This line is important
-		$this->addTplVar('params', array('min' => 8, 'max' => 65431));
 		$this->addTplVar('step', $this->getStep());
+		switch($this->getStep()) {
+			case 3:
+				$this->addTplVar(Imnicore::getLangs());
+			break;
+			default:
+				// nothing.
+			break;
+		}
 		if(isset($_GET['do']) && $_GET['do'] == "check") {
 			switch($this->getStep()) {
 				case 2:
@@ -60,14 +67,15 @@ class Controller extends ControllerBase {
 		$this->addTplVar('errorMsg', $msg);
 	}
 	private function checkInfos() {
-		if(!isset($_POST['URL'])) {
+		if(!isset($_POST['URL']) || !isset($_POST['name']) || !isset($_POST['defaultLang'])) {
 			$errored = true;
 			$msg = Lang::get('form.error.empty');
 			$this->addTplVar('errorMsg', $msg);
 		} else {
 			$db = Imnicore::getDB();
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "path", ?)', array($_POST['path']));
-			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES ');
+			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "name", ?)', array($_POST['name']));
+			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "lang", ?)', array($_POST['defaultLang']));
 		}
 	}
 	private function delete() {
