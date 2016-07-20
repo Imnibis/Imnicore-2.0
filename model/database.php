@@ -8,7 +8,7 @@
 #									#
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
-class Database {
+class Database { 
 	private $db;	
 	public function __construct($host, $dbuser, $dbpassword, $dbname) {
 		try {
