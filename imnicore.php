@@ -9,17 +9,48 @@
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
 session_start();
-require('model/database.php');
 class Imnicore {
-
-	private static function getConfig() {
+	private static $db = NULL;
+	private static $page = NULL;
+	private static $relativePath = "";
+	private static $isAuthorized = array();
+	
+	private static function getConfig():array {
 		$json = file_get_contents('settings.json');
 		return json_decode($json, true);
 	}
 	
-	public static function getDB() {
-		$config = self::getConfig();
-		return new Database($config['database']['host'], $config['database']['user'], $config['database']['password'], $config['database']['name']);
+	public static function getDB():Database {
+		if(self::$db == NULL) {
+			$config = self::getConfig();
+			return self::$db = new Database($config['database']['host'], $config['database']['user'], $config['database']['password'], $config['database']['name']);
+		} else {
+			return self::$db;
+		}
+	}
+	
+	public static function isAuthorized(string $case, bool $bool = NULL):bool {
+		switch($bool) {
+			case NULL:
+				return (is_array(self::$isAuthorized)) ? (isset(self::$isAuthorized[$case]) ? self::$isAuthorized[$case] : false) : self::$isAuthorized;
+			break;
+			default:
+				if($case = '*') {
+					self::$isAuthorized = $bool;
+				} else {
+					self::$isAuthorized[$case] = $bool;
+				}
+				return true;
+			break;
+		}
+	}
+	
+	public static function setRelativePath($path) {
+		self::$relativePath = $path;
+	}
+	
+	public static function getRelativePath():string {
+		return self::$relativePath;
 	}
 	
 	public static function rmdir($dir) { 
@@ -38,7 +69,7 @@ class Imnicore {
     rmdir($dir); 
 	}
 	
-	public static function getLangs() {
+	public static function getLangs():array {
 		$langs = array();
 		foreach(glob('lang/*.lang') as $lang) {
 			$langs[] = $lang;
@@ -46,7 +77,7 @@ class Imnicore {
 		return $langs;
 	}
 	
-	public static function hash($password) {
+	public static function hash($password):string {
 		$db = self::getDB();
 		$salt1 = $db->query('SELECT * FROM ic_settings WHERE name = "salt1"');
 		$salt2 = $db->query('SELECT * FROM ic_settings WHERE name = "salt2"');
@@ -61,7 +92,7 @@ class Imnicore {
 		return sha1($salt1 . $salt2 . md5($salt1 . $password . $salt2 . $salt1) . $salt2 . $salt1 . $salt2); // I love security
 	}
 	
-	public static function crypto_rand_secure($min, $max)
+	public static function crypto_rand_secure($min, $max):string
 	{
 		$range = $max - $min;
 		if ($range < 1) return $min;
@@ -76,7 +107,7 @@ class Imnicore {
 		return $min + $rnd;
 	}
 	
-	public static function usersTable($table = NULL) {
+	public static function usersTable($table = NULL):string {
 		$db = self::getDB();
 		if($table == NULL) {
 			return (self::installed()) ? self::getSetting('usersTable', 'users') : 'undefined';
@@ -88,7 +119,7 @@ class Imnicore {
 		}
 	}
 	
-	public static function getSetting($param, $default = NULL) {
+	public static function getSetting($param, $default = NULL):string {
 		$db = self::getDB();
 		$query = $db->query('SELECT * FROM ic_settings WHERE `name` = ?', array($param));
 		if(!$query) {
@@ -98,7 +129,7 @@ class Imnicore {
 		return (self::installed()) ? $query['value'] : 'undefined';
 	}
 
-	public static function setSetting($param, $value) {
+	public static function setSetting($param, $value):bool {
 		$db = self::getDB();
 		$query = $db->query('SELECT * FROM ic_settings WHERE `name` = ?', array($param));
 		if($query) {
@@ -109,7 +140,7 @@ class Imnicore {
 		return true;
 	}
 	
-	public static function getToken($length) {
+	public static function getToken($length):string {
 		$token = "";
 		$codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		$codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
@@ -121,11 +152,11 @@ class Imnicore {
 		return $token;
 	}
 	
-	public static function getIcVersion() {
+	public static function getIcVersion():string {
 		return (self::installed()) ? self::getSetting('version') : '2.0';
 	}
 	
-	public static function installed() {
+	public static function installed():bool {
 		return (file_exists("settings.json"));
 	}
 	
@@ -138,23 +169,51 @@ class Imnicore {
 		}
 	}
 	
-	public static function getRequestedPage() {
+	public static function getPageID($override = false):string {
+		return (self::$page == NULL || $override) ? (isset($_GET['page']) ? $_GET['page'] : 'index') : self::$page;
+	}
+	
+	public static function is404($bool = NULL):bool {
+		switch($bool) {
+			case true:
+				self::setPage('404');
+				return true;
+			break;
+			case false:
+				self::setPage(self::getPageID(true));
+				return true;
+			break;
+			case NULL:
+				return (self::getPageID() == '404');
+			break;
+			default:
+				return false;
+			break;
+		}
+	}
+	
+	public static function setPage($page):bool {
+		self::$page = $page;
+		return true;
+	}
+	
+	public static function getRequestedPage():string {
 		return (isset($_GET['page'])) ? $_GET['page'] : 'index';
 	}
 	
-	public static function getPath() {
-		return self::getSetting('path');
+	public static function getPath():string {
+		return (self::installed()) ? self::getSetting('path') : '';
 	}
 	
-	public static function getLang() {
+	public static function getLang():string {
 		return (self::installed()) ? self::getSetting('lang') : 'fr';
 	}
 	
-	public static function getTheme() {
+	public static function getTheme():string {
 		return (self::installed()) ? self::getSetting('theme') : 'default';
 	}
 	
-	public static function init() {
+	public static function init():array {
 		if(!self::installed() && self::getRequestedPage() != 'imnicore/install') {
 			self::redirect('imnicore/install');
 		}

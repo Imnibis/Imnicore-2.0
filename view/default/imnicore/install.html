@@ -1,7 +1,36 @@
-test: {Lang::get("register.error.username.length", $params)}<br>
-test2: {Lang::get("begin")}<br>
-test3: {Lang::get("install.welcome.title", "2.0")}
-<br>
-<br>
-<br>
-{Lang::debug()|@print_r}
+<!DOCTYPE html>
+<html lang="{Imnicore::getLang()}">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Imnicore: {Lang::get('setup')}</title>
+		<link rel="stylesheet" href="getCss/install.css" />
+	</head>
+	<body>
+		<div class="logo"></div>
+		<div class="content">
+			<div id="container">
+				{if isset($errorMsg)}
+					<div id="error">{$errorMsg}</div>
+				{/if}
+				{if $step == 0}
+					<h3 class="container title">{Lang::get('install.welcome.title', '2.0')}</h3>
+					<div class="container body">
+						<p>{Lang::get('install.welcome.text1')}<br>
+						{Lang::get('install.welcome.text2')}</p>
+						<p>{Lang::get('install.welcome.text3')}</p>
+					</div>
+				{elseif $step == 1}
+					{$step}
+				{elseif $step == 2}
+					{$step}
+				{elseif $step == 3}
+					{$step}
+				{elseif $step == 4}
+					{$step}
+				{else}
+					{Lang::get('install.error.unknown.step')}: {$step}
+				{/if}
+			</div>
+		</div>
+	</body>
+</html>

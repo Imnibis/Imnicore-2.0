@@ -1,0 +1,3 @@
+{{PATH}}
+ça fonctionne
+{{LANG}}

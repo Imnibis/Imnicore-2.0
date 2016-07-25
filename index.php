@@ -12,10 +12,14 @@
 //  2.0 par Imnibis                                                         |  |  |  |
 
 
-require('inc/errorHandler.php');
+require('lib/errorHandler.php');
+require('model/database.php');
 require('imnicore.php');
-require('inc/lang.php');
-require('inc/controller.php');
-require('inc/response.php');
+require('lib/dynscripts.php');
+require('lib/lang.php');
+require('lib/controller.php');
+require('lib/response.php');
+require('lib/globals.php');
 
+Globals::init();
 $response = new Response();
