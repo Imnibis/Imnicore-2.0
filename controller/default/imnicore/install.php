@@ -2,19 +2,18 @@
 
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 #									#
-#			   IMNICORE				#
+#			  IMNICORE v2			#
 #									#
 #			  PAR IMNIBIS			#
 #									#
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
 class Controller extends ControllerBase {
-	public function __construct() {
-		$this->init(); // This line is important
+	public function run() {
 		$this->addTplVar('step', $this->getStep());
 		switch($this->getStep()) {
 			case 3:
-				$this->addTplVar(Imnicore::getLangs());
+				$this->addTplVar('langs', Imnicore::getLangs());
 			break;
 			default:
 				// nothing.
@@ -36,8 +35,11 @@ class Controller extends ControllerBase {
 			$this->delete();
 		}
 	}
+	public function authorize() {
+		Imnicore::isAuthorized('*', true);
+	}
 	private function getStep() {
-		return (isset($_GET['step'])) ? preg_replace('step([0-9]+)', '$1', $_GET['step']) : 1;
+		return (isset($_GET['step'])) ? preg_replace('#step([0-9]+)#', '$1', $_GET['step']) : 0;
 	}
 	private function checkDB() {
 		$errored = false;
@@ -49,7 +51,7 @@ class Controller extends ControllerBase {
 				$db = new Database($_POST['host'], $_POST['user'], $_POST['password'], $_POST['dbname']);
 			} catch(PDOException $e) {
 				$errored = true;
-				$msg = Lang::get('install.database.error.pdo') . $e->getMessage();
+				$msg = Lang::get('install.database.error.pdo', $e->getMessage());
 			}
 		}
 		if(!$errored) {
@@ -76,10 +78,13 @@ class Controller extends ControllerBase {
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "path", ?)', array($_POST['path']));
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "name", ?)', array($_POST['name']));
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "lang", ?)', array($_POST['defaultLang']));
+			Imnicore::redirect('imnicore/install/step4');
 		}
 	}
 	private function delete() {
-		Imnicore::rmdir('controller/');
+		Imnicore::rmdir('controller/imnicore/');
+		Imnicore::rmdir('css/imnicore/');
+		Imnicore::rmdir('js/imnicore/');
 		Imnicore::redirect(Imnicore::getPath());
 	}
 }

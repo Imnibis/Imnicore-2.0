@@ -12,12 +12,13 @@ class ControllerBase {
 	private $tpl;
 	private $tplPath = NULL;
 	private $tplFile = NULL;
-	public function init() {
-		require('smarty/libs/Autoloader.php');
-		Smarty_Autoloader::register();
+	public function __construct() {
+		require('phar://lib/smarty.phar');
+		//Smarty_Autoloader::register();
 		$this->tpl = new Smarty();
+		$this->tpl->setCompileDir('/templates_c');
 	}
-	public function addTplVar($var, $value) {
+	public function addTplVar($var, $value):bool {
 		$this->tpl->assign($var, $value);
 		return true;
 	}
@@ -26,7 +27,10 @@ class ControllerBase {
 			$this->addTplVar($k, $v);
 		}
 	}
-	public function displayTpl($path = NULL, $file = NULL) {
+	public function authorize() {
+		
+	}
+	public function displayTpl($path = NULL, $file = NULL):bool {
 		if($this->tplPath != NULL) {
 			$path = $this->tplPath();
 		}
@@ -37,7 +41,7 @@ class ControllerBase {
 		$this->tpl->display($file . '.html');
 		return true;
 	}
-	public function setTplPath($path) {
+	public function setTplPath($path):bool {
 		$this->tplPath = $path;
 		return true;
 	}

@@ -9,11 +9,11 @@
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
 class Lang {
-	private static function getLangVars() {
+	private static function getLangVars():array {
 		$file = file_get_contents('lang/' . Imnicore::getLang() . '.lang');
 		return json_decode($file, true);
 	}
-	private static function parse($langVar, $vars) {
+	private static function parse($langVar, $vars):string {
 		if(is_array($vars)) {
 			foreach($vars as $k => $v) {
 				$langVar = preg_replace('#(.)%' . $k . '%(.)#', '${1}' . $v . '${2}', $langVar);
@@ -24,11 +24,11 @@ class Lang {
 		return $langVar;
 	}
 	
-	public static function debug() {
+	public static function debug():array {
 		return self::getLangVars();
 	}
 	
-	public static function get($langVar, $vars = NULL) {
+	public static function get($langVar, $vars = NULL):string {
 		if(isset(self::getLangVars()[$langVar])) {
 			if($vars == NULL) {
 				return self::getLangVars()[$langVar];
