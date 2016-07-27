@@ -20,7 +20,7 @@ class Response {
 	}
 	private function checkInstall():bool {
 		if(!Imnicore::installed() && !Imnicore::isAuthorized('install')) {
-			Imnicore::redirect('/' . Imnicore::getRelativePath() . '/imnicore/install');
+			Imnicore::redirect(Imnicore::getRelativePath() . '/imnicore/install');
 		}
 		return true;
 	}

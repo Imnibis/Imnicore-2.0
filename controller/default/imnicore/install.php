@@ -10,9 +10,10 @@
 
 class Controller extends ControllerBase {
 	public function run() {
+		$this->redirectBadRequests();
 		$this->addTplVar('step', $this->getStep());
 		switch($this->getStep()) {
-			case 3:
+			case 2:
 				$this->addTplVar('langs', Imnicore::getLangs());
 			break;
 			default:
@@ -21,10 +22,13 @@ class Controller extends ControllerBase {
 		}
 		if(isset($_GET['do']) && $_GET['do'] == "check") {
 			switch($this->getStep()) {
-				case 2:
+				case 0:
+					$_SESSION['step'] = 1;
+					Imnicore::redirect(Imnicore::getPath() . '/imnicore/install/step1');
+				case 1:
 					$this->checkDB();
 				break;
-				case 3:
+				case 2:
 					$this->checkInfos();
 				break;
 				default:
@@ -37,6 +41,17 @@ class Controller extends ControllerBase {
 	}
 	public function authorize() {
 		Imnicore::isAuthorized('*', true);
+	}
+	private function redirectBadRequests() {
+		if(Imnicore::installed()) {
+			Imnicore::redirect(Imnicore::getPath());
+		}
+		if(isset($_SESSION['step']) && $_SESSION['step'] != $this->getStep()) {
+			Imnicore::redirect(Imnicore::getPath() . '/imnicore/install/step' . $_SESSION['step']);
+		}
+		if(!isset($_SESSION['step']) && $this->getStep() != 0) {
+			Imnicore::redirect(Imnicore::getPath() . '/imnicore/install');
+		}
 	}
 	private function getStep() {
 		return (isset($_GET['step'])) ? preg_replace('#step([0-9]+)#', '$1', $_GET['step']) : 0;
@@ -61,10 +76,18 @@ class Controller extends ControllerBase {
 					'password' => $_POST['password'],
 					'name' => $_POST['dbname']
 			));
-			$json = json_encode($vars);
+			$json = json_encode($vars, JSON_PRETTY_PRINT);
 			$file = fopen('settings.json', 'w');
 			fwrite($file, $json);
-			Imnicore::redirect('imnicore/install/step3');
+			fclose($file);
+			$db = Imnicore::getDB();
+			$db->query('CREATE TABLE IF NOT EXISTS `ic_settings` ( `id` INT NOT NULL AUTO_INCREMENT , `name` TEXT NOT NULL , `value` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;');
+			Imnicore::setSetting('path', Imnicore::getRelativePath());
+			Imnicore::setSetting('lang', 'fr');
+			Imnicore::setSetting('theme', 'default');
+			Imnicore::setSetting('installed', '0');
+			$_SESSION['step'] = 2;
+			Imnicore::redirect(Imnicore::getPath() . '/imnicore/install/step2');
 		}
 		$this->addTplVar('errorMsg', $msg);
 	}
@@ -78,13 +101,17 @@ class Controller extends ControllerBase {
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "path", ?)', array($_POST['path']));
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "name", ?)', array($_POST['name']));
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "lang", ?)', array($_POST['defaultLang']));
-			Imnicore::redirect('imnicore/install/step4');
+			$_SESSION['step'] = 3;
+			Imnicore::redirect(Imnicore::getPath() . '/imnicore/install/step3');
 		}
 	}
 	private function delete() {
-		Imnicore::rmdir('controller/imnicore/');
-		Imnicore::rmdir('css/imnicore/');
-		Imnicore::rmdir('js/imnicore/');
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/controller/imnicore/');
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/view/imnicore/');
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/css/imnicore/');
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/js/imnicore/');
+		unset($_SESSION['step']);
+		
 		Imnicore::redirect(Imnicore::getPath());
 	}
 }

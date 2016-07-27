@@ -16,10 +16,10 @@ class Lang {
 	private static function parse($langVar, $vars):string {
 		if(is_array($vars)) {
 			foreach($vars as $k => $v) {
-				$langVar = preg_replace('#(.)%' . $k . '%(.)#', '${1}' . $v . '${2}', $langVar);
+				$langVar = preg_replace('#(.?)%' . $k . '%(.?)#', '${1}' . $v . '${2}', $langVar);
 			}
 		} else {
-			$langVar = preg_replace('#(.)%([^%]+)%(.)#', '${1}' . $vars . '${3}', $langVar);
+			$langVar = preg_replace('#(.?)%([^%]+)%(.?)#', '${1}' . $vars . '${3}', $langVar);
 		}
 		return $langVar;
 	}

@@ -3,24 +3,43 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Imnicore: {Lang::get('setup')}</title>
-		<link rel="stylesheet" href="getCss/install.css" />
+		<link rel="stylesheet" href="{Imnicore::getRelativePath()}/getCss/imnicore/install.css" />
 	</head>
 	<body>
-		<div class="logo"></div>
 		<div class="content">
 			<div id="container">
-				{if isset($errorMsg)}
-					<div id="error">{$errorMsg}</div>
-				{/if}
 				{if $step == 0}
 					<h3 class="container title">{Lang::get('install.welcome.title', '2.0')}</h3>
+					{if isset($errorMsg)}
+						<div id="error">{$errorMsg}</div>
+					{/if}
 					<div class="container body">
 						<p>{Lang::get('install.welcome.text1')}<br>
 						{Lang::get('install.welcome.text2')}</p>
 						<p>{Lang::get('install.welcome.text3')}</p>
+						<div id="button-container">
+							<a id="button" href="{Imnicore::getPath()}/imnicore/install/step0/check">{Lang::get('begin')}</a>
+						</div>
 					</div>
 				{elseif $step == 1}
-					{$step}
+					<h3 class="container title">{Lang::get('install.database.title')}</h3>
+					{if isset($errorMsg)}
+						<div id="error">{$errorMsg}</div>
+					{/if}
+					<div class="container body">
+						<p>{Lang::get('install.database.text')}</p>
+						<form action="{Imnicore::getPath()}/imnicore/install/step1/check" method="POST">
+							<ul id="inputs">
+								<li><label for="host">{Lang::get('install.database.host')}: </label><input type="text" name="host" /></li>
+								<li><label for="user">{Lang::get('install.database.user')}: </label><input type="text" name="user" /></li>
+								<li><label for="password">{Lang::get('install.database.password')}: </label><input type="password" name="password" /></li>
+								<li><label for="dbname">{Lang::get('install.database.name')}: </label><input type="text" name="dbname" /></li>
+							</ul>
+							<div id="button-container">
+								<input id="button" type="submit" value="{Lang::get('done')}" />
+							</div>
+						</form>
+					</div>
 				{elseif $step == 2}
 					{$step}
 				{elseif $step == 3}
