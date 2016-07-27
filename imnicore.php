@@ -115,6 +115,7 @@ class Imnicore {
 			return (self::installed()) ? self::getSetting('usersTable', 'users') : 'undefined';
 		} else {
 			self::setSetting('usersTable', $table);
+			return 'done';
 		}
 	}
 	

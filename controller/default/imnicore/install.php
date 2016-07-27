@@ -31,6 +31,11 @@ class Controller extends ControllerBase {
 				case 2:
 					$this->checkInfos();
 				break;
+				case 3:
+					unset($_SESSION['step']);
+					Imnicore::setSetting('installed', '1');
+					Imnicore::redirect(Imnicore::getPath());
+				break;
 				default:
 					// nothing.
 				break;
@@ -80,7 +85,7 @@ class Controller extends ControllerBase {
 			fclose($file);
 			$db = Imnicore::getDB();
 			$db->query('CREATE TABLE IF NOT EXISTS `ic_settings` ( `id` INT NOT NULL AUTO_INCREMENT , `name` TEXT NOT NULL , `value` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;');
-			$db->query('CREATE TABLE IF NOT EXISTS `ic_user_settings` (`id` INT NOT NULL AUTO_INCREMENT , `uid` INT NOT NULL , `name` TEXT NOT NULL , `value` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=UTF-8;');
+			$db->query('CREATE TABLE IF NOT EXISTS `ic_user_settings` (`id` INT NOT NULL AUTO_INCREMENT , `uid` INT NOT NULL , `name` TEXT NOT NULL , `value` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=UTF8;');
 			Imnicore::setSetting('path', Imnicore::getRelativePath());
 			Imnicore::setSetting('lang', 'fr');
 			Imnicore::setSetting('theme', 'default');
