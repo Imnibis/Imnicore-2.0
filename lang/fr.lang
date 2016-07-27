@@ -17,7 +17,7 @@
 	"install.default.url": "URL du site",
 	"install.done.title": "Installation terminée!",
 	"install.done.text1": "L'installation s'est déroulée avec succès! Vous pouvez maintenant commencer à utiliser Imnicore.",
-	"install.done.text2": "Cliquez sur le bouton ci-dessous pour supprimer les fichiers d'installation.",
+	"install.done.text2": "Cliquez sur le bouton ci-dessous pour supprimer les fichiers d'installation. C'est très important pour la sécurité de votre site.",
 	"install.done.remove": "Supprimer",
 	"done": "Valider",
 	"begin": "Commencer",

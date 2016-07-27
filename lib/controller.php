@@ -13,10 +13,9 @@ class ControllerBase {
 	private $tplPath = NULL;
 	private $tplFile = NULL;
 	public function __construct() {
-		require('phar://lib/smarty.phar');
-		//Smarty_Autoloader::register();
+		require('smarty/libs/Autoloader.php');
+		Smarty_Autoloader::register();
 		$this->tpl = new Smarty();
-		$this->tpl->setCompileDir('/templates_c');
 	}
 	public function addTplVar($var, $value):bool {
 		$this->tpl->assign($var, $value);

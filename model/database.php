@@ -14,7 +14,7 @@ class Database {
 		try {
 			$this->db = new PDO('mysql:host=' . $host . ';dbname=' . $dbname, $dbuser, $dbpassword);
 		} catch(PDOException $e) {
-			throw new PDOException($e->getMessage());
+			throw $e;
 		}
 		$this->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		$this->db->query("SET CHARACTER SET utf8");

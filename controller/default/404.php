@@ -9,5 +9,7 @@
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
 class Controller extends ControllerBase {
-	
+	public function run() {
+		
+	}
 }

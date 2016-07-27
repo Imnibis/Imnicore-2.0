@@ -122,18 +122,18 @@ class Imnicore {
 	public static function getSetting($param, $default = NULL):string {
 		$db = self::getDB();
 		$query = $db->query('SELECT * FROM ic_settings WHERE `name` = ?', array($param));
-		if(!$query) {
+		if(!$query && $default != NULL) {
 			self::setSetting($param, $default);
 			$query['value'] = $default;
 		}
-		return (self::installed()) ? $query['value'] : 'undefined';
+		return (self::installed() && $query) ? $query['value'] : 'undefined';
 	}
 
 	public static function setSetting($param, $value):bool {
 		$db = self::getDB();
 		$query = $db->query('SELECT * FROM ic_settings WHERE `name` = ?', array($param));
 		if($query) {
-			$db->query('UPDATE TABLE ic_settings SET `value` = ? WHERE `name` = ?', array($value, $param));
+			$db->query('UPDATE ic_settings SET `value` = ? WHERE `name` = ?', array($value, $param));
 		} else {
 			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, ?, ?)', array($param, $value));
 		}
@@ -157,7 +157,17 @@ class Imnicore {
 	}
 	
 	public static function installed():bool {
-		return (file_exists("settings.json"));
+		if(!file_exists(self::getRelativePath() . '/settings.json')) {
+			return false;
+		}
+		$installed = self::getDB()->query('SELECT * FROM ic_settings WHERE `name` = "installed"');
+		if(!$installed) {
+			return false;
+		} elseif($installed['value'] == "0") {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	public static function redirect($url, $javascript = false) {
@@ -202,7 +212,7 @@ class Imnicore {
 	}
 	
 	public static function getPath():string {
-		return (self::installed()) ? self::getSetting('path') : '';
+		return (self::installed()) ? self::getSetting('path') : self::getRelativePath();
 	}
 	
 	public static function getLang():string {

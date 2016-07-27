@@ -22,7 +22,8 @@ class Globals {
 		$path = explode('\\', dirname(dirname(__FILE__)));
 		$path = explode('/', end($path));
 		$path = end($path);
-		Imnicore::setRelativePath($path);
+		$path = preg_replace('#\\\\#', '/', $path);
+		Imnicore::setRelativePath('/' . $path);
 	}
 	
 	private static function initDynScripts() {

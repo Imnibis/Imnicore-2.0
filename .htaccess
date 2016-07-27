@@ -7,8 +7,8 @@ RewriteEngine On
 RewriteRule ^imnicore/install/([^\/]+)$ index.php?page=imnicore/install&step=$1
 RewriteRule ^imnicore/install/([^\/]+)/([^\/]+)$ index.php?page=imnicore/install&step=$1&do=$2
 
-# getCss & getJs
-RewriteRule ^(getCss|getJs)/(.+).(css|js)$ index.php?page=$1&file=$2
+# getCss, getJs & getImg
+RewriteRule ^(getCss|getJs|getImg)/([^.]+).(.+)$ index.php?page=$1&file=$2&ext=$3
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.+)$ index.php?page=$1 [QSA]

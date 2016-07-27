@@ -13,11 +13,11 @@ class Controller extends ControllerBase {
 		header('Content-Type: text/css');
 		$this->addTplVar('errored', "false");
 		if(!isset($_GET['file'])) {
-			$this->addTplVar('errored', "true");
+			$this->addTplVar('errored', "no get argument");
 			return false;
 		}
 		if(!$this->getFile($_GET['file'])) {
-			$this->addTplVar('errored', "true");
+			$this->addTplVar('errored', "file dont exist");
 		}
 		$this->addTplVar('script', $this->parse($this->getFile($_GET['file'])));
 	}
