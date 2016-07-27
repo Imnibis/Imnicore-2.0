@@ -77,7 +77,7 @@ class Controller extends ControllerBase {
 					'name' => $_POST['dbname']
 			));
 			$json = json_encode($vars, JSON_PRETTY_PRINT);
-			$file = fopen('settings.json', 'w');
+			$file = fopen(Imnicore::getRelativePath() . '/settings.json', 'w');
 			fwrite($file, $json);
 			fclose($file);
 			$db = Imnicore::getDB();
@@ -106,10 +106,16 @@ class Controller extends ControllerBase {
 		}
 	}
 	private function delete() {
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/controller/imnicore/');
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/view/imnicore/');
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/css/imnicore/');
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/js/imnicore/');
+		$tempHtaccess = file_get_contents(Imnicore::getRelativePath() . '/controller/imnicore/temphtaccess.txt');
+		$newHtaccess = file_get_contents(Imnicore::getRelativePath() . '/controller/imnicore/newhtaccess.txt');
+		$htaccess = fopen(Imnicore::getRelativePath() . '/.htaccess');
+		fwrite($htaccess, $tempHtaccess);
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/controller/' . Imnicore::getTheme() . '/imnicore/');
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/view/' . Imnicore::getTheme() . '/imnicore/');
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/css/' . Imnicore::getTheme() . '/imnicore/');
+		Imnicore::rmdir(Imnicore::getRelativePath() . '/js/' . Imnicore::getTheme() . '/imnicore/');
+		fwrite($htaccess, $newHtaccess);
+		fclose($htaccess);
 		unset($_SESSION['step']);
 		
 		Imnicore::redirect(Imnicore::getPath());
