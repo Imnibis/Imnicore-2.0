@@ -35,8 +35,6 @@ class Controller extends ControllerBase {
 					// nothing.
 				break;
 			}
-		} elseif(isset($_GET['do']) && $_GET['do'] == "delete") {
-			$this->delete();
 		}
 	}
 	public function authorize() {
@@ -77,11 +75,12 @@ class Controller extends ControllerBase {
 					'name' => $_POST['dbname']
 			));
 			$json = json_encode($vars, JSON_PRETTY_PRINT);
-			$file = fopen(Imnicore::getRelativePath() . '/settings.json', 'w');
+			$file = fopen('settings.json', 'w');
 			fwrite($file, $json);
 			fclose($file);
 			$db = Imnicore::getDB();
 			$db->query('CREATE TABLE IF NOT EXISTS `ic_settings` ( `id` INT NOT NULL AUTO_INCREMENT , `name` TEXT NOT NULL , `value` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;');
+			$db->query('CREATE TABLE IF NOT EXISTS `ic_user_settings` (`id` INT NOT NULL AUTO_INCREMENT , `uid` INT NOT NULL , `name` TEXT NOT NULL , `value` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=UTF-8;');
 			Imnicore::setSetting('path', Imnicore::getRelativePath());
 			Imnicore::setSetting('lang', 'fr');
 			Imnicore::setSetting('theme', 'default');
@@ -92,7 +91,7 @@ class Controller extends ControllerBase {
 		$this->addTplVar('errorMsg', $msg);
 	}
 	private function checkInfos() {
-		if(empty($_POST['URL']) || empty($_POST['name']) || empty($_POST['defaultLang'])) {
+		if(empty($_POST['URL']) || empty($_POST['name']) || empty($_POST['defaultLang']) || empty($_POST['usersTable'])) {
 			$errored = true;
 			$msg = Lang::get('form.error.empty');
 			$this->addTplVar('errorMsg', $msg);
@@ -101,16 +100,12 @@ class Controller extends ControllerBase {
 			Imnicore::setSetting('path', $path);
 			Imnicore::setSetting('lang', $_POST['defaultLang']);
 			Imnicore::setSetting('name', $_POST['name']);
+			Imnicore::usersTable($_POST['usersTable']);
+			if(!isset($_POST['tableExists'])) {
+				Imnicore::getDB()->query('CREATE TABLE `' . $_POST['usersTable'] . '` ( `id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(255) NOT NULL , `password` VARCHAR(255) NOT NULL , `email` VARCHAR(255) NOT NULL , `rank` INT NOT NULL , `auth_ticket` VARCHAR(100) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;');
+			}
 			$_SESSION['step'] = 3;
 			Imnicore::redirect(Imnicore::getPath() . '/imnicore/install/step3');
 		}
-	}
-	private function delete() {
-		unlink(Imnicore::getRelativePath() . '/controller/' . Imnicore::getTheme() . '/imnicore/install.php');
-		unlink(Imnicore::getRelativePath() . '/view/' . Imnicore::getTheme() . '/imnicore/install.html');
-		unlink(Imnicore::getRelativePath() . '/css/' . Imnicore::getTheme() . '/imnicore/install.css');
-		unset($_SESSION['step']);
-		Imnicore::setSetting('installed', '1');
-		Imnicore::redirect(Imnicore::getPath());
 	}
 }

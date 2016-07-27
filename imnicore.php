@@ -114,10 +114,7 @@ class Imnicore {
 		if($table == NULL) {
 			return (self::installed()) ? self::getSetting('usersTable', 'users') : 'undefined';
 		} else {
-			if(self::installed()) {
-				self::setSetting('usersTable', $table);
-			}
-			return self::installed();
+			self::setSetting('usersTable', $table);
 		}
 	}
 	
@@ -159,7 +156,7 @@ class Imnicore {
 	}
 	
 	public static function installed():bool {
-		if(!file_exists(self::getRelativePath() . '/settings.json')) {
+		if(!file_exists('settings.json')) {
 			return false;
 		}
 		$installed = self::getDB()->query('SELECT * FROM ic_settings WHERE `name` = "installed"');
