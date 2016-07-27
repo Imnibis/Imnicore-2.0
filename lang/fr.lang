@@ -15,6 +15,8 @@
 	"install.default.title": "Configuration par défaut",
 	"install.default.text": "Quelques dernières précisions avant de pouvoir commencer à utiliser Imnicore.",
 	"install.default.url": "URL du site",
+	"install.default.sitename": "Nom du site",
+	"install.default.lang": "Langue par défaut",
 	"install.done.title": "Installation terminée!",
 	"install.done.text1": "L'installation s'est déroulée avec succès! Vous pouvez maintenant commencer à utiliser Imnicore.",
 	"install.done.text2": "Cliquez sur le bouton ci-dessous pour supprimer les fichiers d'installation. C'est très important pour la sécurité de votre site.",

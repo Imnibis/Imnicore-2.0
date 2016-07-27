@@ -22,4 +22,9 @@ class DynScripts {
 	public static function getReplacements():array {
 		return self::$replacements;
 	}
+	public static function processLangVars(&$script) {
+		foreach(Lang::getLangVars() as $k => $v) {
+			$script = preg_replace('#{{LANG:' . $k . '}}#', $v, $script);
+		}
+	}
 }
