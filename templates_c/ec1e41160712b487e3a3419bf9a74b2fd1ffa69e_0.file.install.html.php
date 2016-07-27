@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30-dev/71, created on 2016-07-28 01:16:55
+/* Smarty version 3.1.30-dev/71, created on 2016-07-28 01:21:30
   from "D:\Dev\PHP\IMNICORE\view\default\imnicore\install.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30-dev/71',
-  'unifunc' => 'content_579940e7909cc1_44768973',
+  'unifunc' => 'content_579941fa6ea3b1_81810277',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'ec1e41160712b487e3a3419bf9a74b2fd1ffa69e' => 
     array (
       0 => 'D:\\Dev\\PHP\\IMNICORE\\view\\default\\imnicore\\install.html',
-      1 => 1469660632,
+      1 => 1469661657,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_579940e7909cc1_44768973 (Smarty_Internal_Template $_smarty_tpl) {
+function content_579941fa6ea3b1_81810277 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo Imnicore::getLang();?>
@@ -144,7 +144,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl);
 </p>
 						<div id="button-container">
 							<a id="button" href="<?php echo Imnicore::getPath();?>
-"><?php echo Lang::get('install.done');?>
+/imnicore/install/step3/check"><?php echo Lang::get('install.done');?>
 </a>
 						</div>
 					</div>
