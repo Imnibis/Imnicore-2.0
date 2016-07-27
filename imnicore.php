@@ -72,11 +72,13 @@ class Imnicore {
 	public static function getLangs():array {
 		$langs = array();
 		foreach(glob('lang/*.lang') as $lang) {
-			$langs[] = $lang;
+			$langs[] = preg_replace('#lang/(.+).lang#', '$1', $lang);
 		}
 		return $langs;
 	}
-	
+	public static function getDefaultPath():string {
+		return 'http://' . $_SERVER['HTTP_HOST'] . self::getRelativePath();
+	}
 	public static function hash($password):string {
 		$db = self::getDB();
 		$salt1 = $db->query('SELECT * FROM ic_settings WHERE name = "salt1"');

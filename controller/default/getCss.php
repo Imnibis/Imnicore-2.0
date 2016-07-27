@@ -19,7 +19,9 @@ class Controller extends ControllerBase {
 		if(!$this->getFile($_GET['file'])) {
 			$this->addTplVar('errored', "file dont exist");
 		}
-		$this->addTplVar('script', $this->parse($this->getFile($_GET['file'])));
+		$script = $this->parse($this->getFile($_GET['file']));
+		DynScripts::processLangVars($script);
+		$this->addTplVar('script', $script);
 	}
 	public function authorize() {
 		Imnicore::isAuthorized('*', true);

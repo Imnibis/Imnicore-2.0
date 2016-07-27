@@ -58,7 +58,7 @@ class Controller extends ControllerBase {
 	}
 	private function checkDB() {
 		$errored = false;
-		if(!isset($_POST['host']) || !isset($_POST['user']) || !isset($_POST['password']) || !isset($_POST['dbname'])) {
+		if(empty($_POST['host']) || empty($_POST['user']) || empty($_POST['password']) || empty($_POST['dbname'])) {
 			$errored = true;
 			$msg = Lang::get('form.error.empty');
 		} else {
@@ -92,15 +92,15 @@ class Controller extends ControllerBase {
 		$this->addTplVar('errorMsg', $msg);
 	}
 	private function checkInfos() {
-		if(!isset($_POST['URL']) || !isset($_POST['name']) || !isset($_POST['defaultLang'])) {
+		if(empty($_POST['URL']) || empty($_POST['name']) || empty($_POST['defaultLang'])) {
 			$errored = true;
 			$msg = Lang::get('form.error.empty');
 			$this->addTplVar('errorMsg', $msg);
 		} else {
-			$db = Imnicore::getDB();
-			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "path", ?)', array($_POST['path']));
-			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "name", ?)', array($_POST['name']));
-			$db->query('INSERT INTO ic_settings (`id`, `name`, `value`) VALUES (NULL, "lang", ?)', array($_POST['defaultLang']));
+			$path = preg_replace('#([\\/]*)$#', '', $_POST['URL']);
+			Imnicore::setSetting('path', $path);
+			Imnicore::setSetting('lang', $_POST['defaultLang']);
+			Imnicore::setSetting('name', $_POST['name']);
 			$_SESSION['step'] = 3;
 			Imnicore::redirect(Imnicore::getPath() . '/imnicore/install/step3');
 		}

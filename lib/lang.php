@@ -9,9 +9,16 @@
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
 class Lang {
-	private static function getLangVars():array {
-		$file = file_get_contents('lang/' . Imnicore::getLang() . '.lang');
+	private static $forceLang = NULL;
+	public static function getLangVars():array {
+		$file = file_get_contents('lang/' . self::getLang() . '.lang');
 		return json_decode($file, true);
+	}
+	public static function getLang() {
+		return (self::$forceLang == NULL) ? Imnicore::getLang() : self::$forceLang;
+	}
+	public static function forceLang(string $lang) {
+		self::$forceLang = $lang;
 	}
 	private static function parse($langVar, $vars):string {
 		if(is_array($vars)) {

@@ -41,11 +41,39 @@
 						</form>
 					</div>
 				{elseif $step == 2}
-					{$step}
+					<h3 class="container title">{Lang::get('install.default.title')}</h3>
+					{if isset($errorMsg)}
+						<div id="error">{$errorMsg}</div>
+					{/if}
+					<div class="container body">
+						<p>{Lang::get('install.default.text')}</p>
+						<form action="{Imnicore::getPath()}/imnicore/install/step2/check" method="POST">
+							<ul id="inputs">
+								<li><label for="URL">{Lang::get('install.default.url')}: </label><input type="text" name="URL" value="{Imnicore::getDefaultPath()}" /></li>
+								<li><label for="name">{Lang::get('install.default.sitename')}: </label><input type="text" name="name" value="Imnicore" /></li>
+								<li><label for="defaultLang">{Lang::get('install.default.lang')}: </label>
+									<select name="defaultLang">
+										{foreach $langs as $lang}
+											<option>{$lang}</option>
+										{/foreach}
+									</select></li>
+							</ul>
+							<div id="button-container">
+								<input id="button" type="submit" value="{Lang::get('done')}" />
+							</div>
+						</form>
+					</div>
 				{elseif $step == 3}
-					{$step}
-				{elseif $step == 4}
-					{$step}
+					<h3 class="container title">{Lang::get('install.done.title')}</h3>
+					{if isset($errorMsg)}
+						<div id="error">{$errorMsg}</div>
+					{/if}
+					<div class="container body">
+						<p>{Lang::get('install.done.text1')}<br>{Lang::get('install.done.text2')}</p>
+						<div id="button-container">
+							<a id="button" href="{Imnicore::getPath()}/imnicore/install/step3/delete">{Lang::get('install.done.remove')}</a>
+						</div>
+					</div>
 				{else}
 					{Lang::get('install.error.unknown.step')}: {$step}
 				{/if}
