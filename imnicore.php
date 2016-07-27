@@ -66,7 +66,7 @@ class Imnicore {
       			}
 			}
 		}
-    rmdir($dir); 
+    	rmdir($dir); 
 	}
 	
 	public static function getLangs():array {

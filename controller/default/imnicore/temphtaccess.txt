@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Décommentez cette ligne si vous avez des problèmes.
+# RewriteBase /
+
+# Install
+RewriteRule ^imnicore/install/([^\/]+)$ index.php?page=imnicore/install&step=$1
+RewriteRule ^imnicore/install/([^\/]+)/([^\/]+)$ index.php?page=imnicore/install&step=$1&do=$2
+
+# getCss, getJs & getImg
+RewriteRule ^(getCss|getJs|getImg)/([^.]+).(.+)$ index.php?page=$1&file=$2&ext=$3
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?page=$1 [QSA]

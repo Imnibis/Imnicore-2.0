@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Décommentez cette ligne si vous avez des problèmes.
+# RewriteBase /
+
+# getCss, getJs & getImg
+RewriteRule ^(getCss|getJs|getImg)/([^.]+).(.+)$ index.php?page=$1&file=$2&ext=$3
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ index.php?page=$1 [QSA]
