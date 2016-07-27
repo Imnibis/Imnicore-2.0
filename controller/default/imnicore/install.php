@@ -106,18 +106,11 @@ class Controller extends ControllerBase {
 		}
 	}
 	private function delete() {
-		$tempHtaccess = file_get_contents(Imnicore::getRelativePath() . '/controller/imnicore/temphtaccess.txt');
-		$newHtaccess = file_get_contents(Imnicore::getRelativePath() . '/controller/imnicore/newhtaccess.txt');
-		$htaccess = fopen(Imnicore::getRelativePath() . '/.htaccess');
-		fwrite($htaccess, $tempHtaccess);
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/controller/' . Imnicore::getTheme() . '/imnicore/');
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/view/' . Imnicore::getTheme() . '/imnicore/');
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/css/' . Imnicore::getTheme() . '/imnicore/');
-		Imnicore::rmdir(Imnicore::getRelativePath() . '/js/' . Imnicore::getTheme() . '/imnicore/');
-		fwrite($htaccess, $newHtaccess);
-		fclose($htaccess);
+		unlink(Imnicore::getRelativePath() . '/controller/' . Imnicore::getTheme() . '/imnicore/install.php');
+		unlink(Imnicore::getRelativePath() . '/view/' . Imnicore::getTheme() . '/imnicore/install.html');
+		unlink(Imnicore::getRelativePath() . '/css/' . Imnicore::getTheme() . '/imnicore/install.css');
 		unset($_SESSION['step']);
-		
+		Imnicore::setSetting('installed', '1');
 		Imnicore::redirect(Imnicore::getPath());
 	}
 }
