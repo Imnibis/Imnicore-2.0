@@ -16,13 +16,34 @@ class User {
 	private $authToken = NULL;
 	private $rank = NULL;
 	public function __construct() {
-		
+		if(isset($_SESSION['id']) && isset($_SESSION['name']) && isset($_SESSION['email']) && isset($_SESSION['authToken']) && isset($_SESSION['rank'])) {
+			if($_SESSION['authToken'] != Imnicore::getDB()->query('SELECT * FROM ic_user_settings WHERE `uid` = ? && `name` = "auth-token"', array($_SESSION['id']))['value']) {
+				unset($_SESSION['id']);
+				unset($_SESSION['name']);
+				unset($_SESSION['email']);
+				unset($_SESSION['token']);
+				unset($_SESSION['authToken']);
+				unset($_SESSION['rank']);
+			} else {
+				$authToken = $this->getToken();
+				$data = Imnicore::getDB()->query('SELECT * FROM ' . Imnicore::usersTable() . ' WHERE `id` = ?', $_SESSION['id']);
+				$this->setUserVar('id', $data['id']);
+				$this->setUserVar('name', $data['username']);
+				$this->setUserVar('email', $data['email']);
+				$this->setUserVar('authToken', $authToken);
+				$this->setUserVar('rank', $data['rank']);
+				$this->setSetting('auth-token', $authToken);
+			}
+		} elseif(isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
+			$this->login($_COOKIE['username'], $_COOKIE['password']);
+		}
 	}
 	
-	public function login($username, $password) {
+	public function login($username, $password, bool $createCookies = false) {
 		$db = Imnicore::getDB();
 		$errored = false;
-		$password = Imnicore::hash($password);
+		$username = Imnicore::secu($username);
+		$hPassword = Imnicore::hash($password);
 		if(empty($username) || empty($password)) {
 			$errored = true;
 			$msg[] = Lang::get('form.error.empty');
@@ -33,24 +54,23 @@ class User {
 			$req = 'SELECT * FROM ' . Imnicore::usersTable() . ' WHERE email = ? AND password = ?';
 			$isMail = true;
 		}
-		$data = query($req, array($username, $password));
+		$data = query($req, array($username, $hPassword));
 		if(!$data) {
 			$errored = true;
 			$msg[] = Lang::get('login.error.invalid');
 		}
 		if(!$errored) {
-			$authToken = Imnicore::getToken(100);
-			$req = $db->query('SELECT * FROM ic_user_settings WHERE uid = ? && name = "auth-token"', array($data['id']));
-			if(!$req) {
-				$db->query('INSERT INTO ic_user_settings (`id`, `uid`, `name`, `value`) VALUES (NULL, ?, "auth-token", ?)', array($data['id'], $authToken));
-			} else {
-				$db->query('UPDATE ic_user_settings SET value = ? WHERE id = ?', array($authToken, $req['id']));
-			}
+			$authToken = $this->getToken(100);
 			$this->setUserVar('id', $data['id']);
 			$this->setUserVar('name', $data['username']);
 			$this->setUserVar('email', $data['email']);
 			$this->setUserVar('authToken', $authToken);
 			$this->setUserVar('rank', $data['rank']);
+			$this->setSetting('auth-token', $authToken);
+			if($createCookies) {
+				setcookie('username', $this->getName(), time() + (10 * 365 * 24 * 60 * 60));
+				setcookie('password', $password, time() + (10 * 365 * 24 * 60 * 60));
+			}
 			return array('success' => true);
 		} else {
 			return array('success' => false, 'msg' => $msg);
@@ -101,21 +121,52 @@ class User {
 		}
 		if(!$errored) {
 			$hPassword = Imnicore::hash($password);
-			$temptoken = 'IMNICORE-';
-			$temptoken .= Imnicore::getToken(91);
-			$authToken = 'IMNICORE-';
-			$authToken .= Imnicore::getToken(91);
+			$temptoken = $this->getToken();
+			$authToken = $this->getToken();
 			$id = $db->query('INSERT INTO ' . Imnicore::usersTable() . ' (`username`, `password`, `email`, `rank`, `auth_ticket`) VALUES (?, ?, ?, ?, ?)', array($username, $hPassword, $email, $dRank, $temptoken));
-			$db->query('INSERT INTO ic_user_settings (`id`, `uid`, `name`, `value`) VALUES (NULL, ?, "auth-token", ?)', array($id, $authToken));
 			$this->setUserVar('id', $id);
 			$this->setUserVar('name', $username);
 			$this->setUserVar('email', $email);
 			$this->setUserVar('token', $temptoken);
 			$this->setUserVar('authToken', $authToken);
 			$this->setUserVar('rank', $dRank);
+			$this->setSetting('auth-token', $authToken);
 			return array('success' => true);
 		} else {
 			return array('success' => false, 'errors' => $msg);
+		}
+	}
+	
+	private function getToken() {
+		return 'IMNICORE-' . Imnicore::getToken(91);
+	}
+	
+	public function getSetting($param, $default = NULL):string {
+		if($this->isOnline()) {
+			$db = Imnicore::getDB();
+			$query = $db->query('SELECT * FROM ic_user_settings WHERE `name` = ? && `uid` = ?', array($param, $this->getID()));
+			if(!$query && $default != NULL) {
+				$this->setSetting($param, $default);
+				$query['value'] = $default;
+			}
+			return ($query) ? $query['value'] : 'undefined';
+		} else {
+			return 'undefined';
+		}
+	}
+	
+	public function setSetting($param, $value):bool {
+		if($this->isOnline()) {
+			$db = Imnicore::getDB();
+			$query = $db->query('SELECT * FROM ic_user_settings WHERE `name` = ? && `uid` = ?', array($param, $this->getID()));
+			if($query) {
+				$db->query('UPDATE ic_user_settings SET `value` = ? WHERE `name` = ? && `uid` = ?', array($value, $param, $this->getID()));
+			} else {
+				$db->query('INSERT INTO ic_user_settings (`id`, `uid`, `name`, `value`) VALUES (NULL, ?, ?, ?)', array($this->getID(), $param, $value));
+			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -126,6 +177,8 @@ class User {
 		unset($_SESSION['token']);
 		unset($_SESSION['authToken']);
 		unset($_SESSION['rank']);
+		unset($_COOKIE['username']);
+		unset($_COOKIE['password']);
 		Imnicore::redirect(Imnicore::getPath());
 	}
 	

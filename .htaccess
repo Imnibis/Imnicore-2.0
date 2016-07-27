@@ -10,7 +10,5 @@ RewriteRule ^imnicore/install/([^\/]+)/([^\/]+)$ index.php?page=imnicore/install
 # getCss, getJs & getImg
 RewriteRule ^(getCss|getJs|getImg)/([^.]+).(.+)$ index.php?page=$1&file=$2&ext=$3
 
-RewriteRule ^(.+)//override$ $1 [QSA]
-
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.+)$ index.php?page=$1 [QSA]

@@ -17,9 +17,11 @@ require('model/database.php');
 require('imnicore.php');
 require('lib/dynscripts.php');
 require('lib/lang.php');
+require('lib/user.php');
 require('lib/controller.php');
 require('lib/response.php');
 require('lib/globals.php');
 
 Globals::init();
+$user = new User();
 $response = new Response();

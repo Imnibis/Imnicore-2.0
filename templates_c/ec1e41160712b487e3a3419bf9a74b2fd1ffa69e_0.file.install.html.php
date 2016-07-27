@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.30-dev/71, created on 2016-07-27 20:36:12
+/* Smarty version 3.1.30-dev/71, created on 2016-07-28 01:16:55
   from "D:\Dev\PHP\IMNICORE\view\default\imnicore\install.html" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30-dev/71',
-  'unifunc' => 'content_5798ff1cabefb0_58924262',
+  'unifunc' => 'content_579940e7909cc1_44768973',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'ec1e41160712b487e3a3419bf9a74b2fd1ffa69e' => 
     array (
       0 => 'D:\\Dev\\PHP\\IMNICORE\\view\\default\\imnicore\\install.html',
-      1 => 1469644570,
+      1 => 1469660632,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5798ff1cabefb0_58924262 (Smarty_Internal_Template $_smarty_tpl) {
+function content_579940e7909cc1_44768973 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo Imnicore::getLang();?>
@@ -118,6 +118,10 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl);
 ?>
 
 									</select></li>
+								<li><label for="usersTable"><?php echo Lang::get('install.default.users.table');?>
+: </label><input type="text" name="usersTable" value="ic_users" />
+									<input type="checkbox" name="tableExists" /> <label for="tableExists"><?php echo Lang::get('install.default.table.exists');?>
+</label></li>
 							</ul>
 							<div id="button-container">
 								<input id="button" type="submit" value="<?php echo Lang::get('done');?>
@@ -136,9 +140,11 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl);
 						<p><?php echo Lang::get('install.done.text1');?>
 <br><?php echo Lang::get('install.done.text2');?>
 </p>
+						<p><?php echo Lang::get('install.done.text3');?>
+</p>
 						<div id="button-container">
 							<a id="button" href="<?php echo Imnicore::getPath();?>
-/imnicore/install/step3/delete"><?php echo Lang::get('install.done.remove');?>
+"><?php echo Lang::get('install.done');?>
 </a>
 						</div>
 					</div>
