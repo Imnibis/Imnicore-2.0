@@ -9,8 +9,15 @@
 #|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#|#
 
 class Controller extends ControllerBase {
+	private $after = '';
 	public function run() {
 		$this->redirectBadRequests();
+		if(isset($_GET['lang'])) {
+			$_SESSION['lang'] = $_GET['lang'];
+			Lang::forceLang($_GET['lang']);
+		} elseif(isset($_SESSION['lang'])) {
+			Lang::forceLang($_SESSION['lang']);
+		}
 		$this->addTplVar('step', $this->getStep());
 		switch($this->getStep()) {
 			case 2:
@@ -33,6 +40,9 @@ class Controller extends ControllerBase {
 				break;
 				case 3:
 					unset($_SESSION['step']);
+					if(isset($_SESSION['lang'])) {
+						unset($_SESSION['lang']);
+					}
 					Imnicore::setSetting('installed', '1');
 					Imnicore::redirect(Imnicore::getPath());
 				break;
