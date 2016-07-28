@@ -15,16 +15,16 @@ class Response {
 		}
 		$this->display();
 	}
-	private function checkPage():bool {
+	private function checkPage() {
 		return (file_exists('controller/' . Imnicore::getTheme() . '/' . Imnicore::getPageID() . '.php') && file_exists('view/' . Imnicore::getTheme() . '/' . Imnicore::getPageID() . '.html'));
 	}
-	private function checkInstall():bool {
+	private function checkInstall() {
 		if(!Imnicore::installed() && !Imnicore::isAuthorized('install')) {
 			Imnicore::redirect(Imnicore::getRelativePath() . '/imnicore/install');
 		}
 		return true;
 	}
-	private function display():bool {
+	private function display() {
 		require('controller/' . Imnicore::getTheme() . '/' . Imnicore::getPageID() . '.php');
 		$controller = new Controller();
 		$controller->authorize();
