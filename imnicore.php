@@ -216,7 +216,7 @@ class Imnicore {
 	}
 	
 	public static function getLang():string {
-		return (self::installed()) ? self::getSetting('lang') : 'fr';
+		return (self::installed()) ? self::getSetting('lang') : 'en';
 	}
 	
 	public static function getTheme():string {

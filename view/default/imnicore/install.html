@@ -4,6 +4,16 @@
 		<meta charset="UTF-8" />
 		<title>Imnicore: {Lang::get('setup')}</title>
 		<link rel="stylesheet" href="{Imnicore::getRelativePath()}/getCss/imnicore/install.css" />
+		<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+		{if $step == 0}
+			<script>
+				$(document).ready(function() {
+					$('select').change(function(){
+						window.location.href = "{Imnicore::getPath()}/imnicore/install?lang=" + $(this).val();
+					});
+				});
+			</script>
+		{/if}
 	</head>
 	<body>
 		<div class="content">
@@ -17,6 +27,12 @@
 						<p>{Lang::get('install.welcome.text1')}<br>
 						{Lang::get('install.welcome.text2')}</p>
 						<p>{Lang::get('install.welcome.text3')}</p>
+						<p>{Lang::get('install.welcome.change.language')}:&nbsp;
+						<select>
+							{foreach Imnicore::getLangs() as $lang}
+								<option {if $lang == Lang::getLang()}selected{/if}>{$lang}</option>
+							{/foreach}
+						</select></p>
 						<div id="button-container">
 							<a id="button" href="{Imnicore::getPath()}/imnicore/install/step0/check">{Lang::get('begin')}</a>
 						</div>
@@ -54,7 +70,7 @@
 								<li><label for="defaultLang">{Lang::get('install.default.lang')}: </label>
 									<select name="defaultLang">
 										{foreach $langs as $lang}
-											<option>{$lang}</option>
+											<option {if $lang == Lang::getLang()}selected{/if}>{$lang}</option>
 										{/foreach}
 									</select></li>
 								<li><label for="usersTable">{Lang::get('install.default.users.table')}: </label><input type="text" name="usersTable" value="ic_users" />
