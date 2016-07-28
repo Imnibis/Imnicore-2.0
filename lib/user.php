@@ -141,7 +141,7 @@ class User {
 		return 'IMNICORE-' . Imnicore::getToken(91);
 	}
 	
-	public function getSetting($param, $default = NULL):string {
+	public function getSetting($param, $default = NULL) {
 		if($this->isOnline()) {
 			$db = Imnicore::getDB();
 			$query = $db->query('SELECT * FROM ic_user_settings WHERE `name` = ? && `uid` = ?', array($param, $this->getID()));
@@ -155,7 +155,7 @@ class User {
 		}
 	}
 	
-	public function setSetting($param, $value):bool {
+	public function setSetting($param, $value) {
 		if($this->isOnline()) {
 			$db = Imnicore::getDB();
 			$query = $db->query('SELECT * FROM ic_user_settings WHERE `name` = ? && `uid` = ?', array($param, $this->getID()));
