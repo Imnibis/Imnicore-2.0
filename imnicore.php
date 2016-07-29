@@ -140,6 +140,10 @@ class Imnicore {
 		return true;
 	}
 	
+	public static function secu($str) {
+		return htmlspecialchars($str);
+	}
+	
 	public static function getToken($length) {
 		$token = "";
 		$codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

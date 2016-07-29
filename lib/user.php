@@ -120,6 +120,8 @@ class User {
 			$msg[] = Lang::get('register.error.email.exists');
 		}
 		if(!$errored) {
+			$username = secu($username);
+			$email = secu($email);
 			$hPassword = Imnicore::hash($password);
 			$temptoken = $this->getToken();
 			$authToken = $this->getToken();
