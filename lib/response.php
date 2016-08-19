@@ -30,7 +30,7 @@ class Response {
 		$controller->authorize();
 		$this->checkInstall();
 		$controller->run();
-		$controller->displayTpl('view/' . Imnicore::getTheme() . '/', Imnicore::getPageID());
+		$controller->displayTpl('view/' . Imnicore::getTheme() . '/', $controller->getTplName(), $controller->getTplExt());
 		return true;
 	}
 }
