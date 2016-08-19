@@ -29,7 +29,13 @@ class ControllerBase {
 	public function authorize() {
 		
 	}
-	public function displayTpl($path = NULL, $file = NULL) {
+	public function getTplName() {
+		return Imnicore::getPageID();
+	}
+	public function getTplExt() {
+		return 'html'; // by default
+	}
+	public function displayTpl($path = NULL, $file = NULL, $ext = 'html') {
 		if($this->tplPath != NULL) {
 			$path = $this->tplPath();
 		}
@@ -37,7 +43,7 @@ class ControllerBase {
 			$file = $this->tplFile();
 		}
 		$this->tpl->setTemplateDir($path);
-		$this->tpl->display($file . '.html');
+		$this->tpl->display($file . '.' . $ext);
 		return true;
 	}
 	public function setTplPath($path) {
