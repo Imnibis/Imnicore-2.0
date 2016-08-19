@@ -35,7 +35,7 @@ class ControllerBase {
 	public function getTplExt() {
 		return 'html'; // by default
 	}
-	public function displayTpl($path = NULL, $file = NULL, $ext = $this->getTplExt()) {
+	public function displayTpl($path = NULL, $file = NULL, $ext = 'html') {
 		if($this->tplPath != NULL) {
 			$path = $this->tplPath();
 		}
