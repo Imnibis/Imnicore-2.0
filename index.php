@@ -11,7 +11,6 @@
 //	|_________|	 |__|    |__|  |__|    \__|  |_________|   \_______/     \______________/    |__|     \__\  |__________|
 //  2.0 par Imnibis                                                         |  |  |  |
 
-
 require('lib/errorHandler.php');
 require('model/database.php');
 require('imnicore.php');
