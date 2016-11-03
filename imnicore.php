@@ -211,6 +211,10 @@ class Imnicore {
 		return true;
 	}
 	
+    public static function getName() {
+        return (self::installed()) ? self::getSetting('name') : 'Imnicore';
+    }
+    
 	public static function getRequestedPage() {
 		return (isset($_GET['page'])) ? $_GET['page'] : 'index';
 	}
