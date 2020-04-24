@@ -117,7 +117,7 @@ class Controller extends ControllerBase {
 			Imnicore::setSetting('name', $_POST['name']);
 			Imnicore::usersTable($_POST['usersTable']);
 			if(!isset($_POST['tableExists'])) {
-				Imnicore::getDB()->query('CREATE TABLE `' . $_POST['usersTable'] . '` ( `id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(255) NOT NULL , `password` VARCHAR(255) NOT NULL , `email` VARCHAR(255) NOT NULL , `rank` INT NOT NULL , `auth_ticket` VARCHAR(100) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;');
+				Imnicore::getDB()->query('CREATE TABLE `' . $_POST['usersTable'] . '` ( `id` INT NOT NULL AUTO_INCREMENT , `identifier` VARCHAR(255) NOT NULL , `username` VARCHAR(255) NOT NULL , `password` VARCHAR(255) NOT NULL , `email` VARCHAR(255) NOT NULL , `rank` INT NOT NULL , `auth_ticket` VARCHAR(100) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;');
 			}
 			$_SESSION['step'] = 3;
 			Imnicore::redirect(Imnicore::getPath() . '/imnicore/install/step3');
